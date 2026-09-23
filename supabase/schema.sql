@@ -39,7 +39,7 @@ create table if not exists public.rooms (
 
 create table if not exists public.guide_steps (
   id uuid primary key default gen_random_uuid(),
-  section text not null check (section in ('install', 'connect')),
+  section text not null,
   sort_order int not null,
   image_path text,
   is_final boolean not null default false,
@@ -50,6 +50,9 @@ create table if not exists public.guide_steps (
   body_en text not null,
   body_ja text not null
 );
+
+-- Hapus constraint lama jika ada agar bisa menggunakan kategori dinamis
+ALTER TABLE public.guide_steps DROP CONSTRAINT IF EXISTS guide_steps_section_check;
 
 alter table public.settings enable row level security;
 alter table public.rooms enable row level security;
@@ -128,7 +131,7 @@ insert into public.guide_steps (
   title_id, title_en, title_ja, body_id, body_en, body_ja
 ) values
 (
-  'install', 1, '/images/panduan_wireless/1.1.png', false,
+  'proyektor', 1, '/images/panduan_wireless/1.1.png', false,
   $id$Klik kanan file installer$id$,
   $en$Right-click installer file$en$,
   $ja$インストーラーを右クリック$ja$,
@@ -137,7 +140,7 @@ insert into public.guide_steps (
   $ja$インストーラーファイル (iProV410Win_Web) を右クリックし、「管理者として実行」を選択します。$ja$
 ),
 (
-  'install', 2, '/images/panduan_wireless/1.2.jpeg', false,
+  'proyektor', 2, '/images/panduan_wireless/1.2.jpeg', false,
   $id$Konfirmasi UAC$id$,
   $en$Confirm UAC$en$,
   $ja$UACの確認$ja$,
@@ -146,7 +149,7 @@ insert into public.guide_steps (
   $ja$ユーザーアカウント制御 (UAC) の確認画面が表示されたら、「はい」を選択します。$ja$
 ),
 (
-  'install', 3, '/images/panduan_wireless/1.3.png', false,
+  'proyektor', 3, '/images/panduan_wireless/1.3.png', false,
   $id$Pilih bahasa$id$,
   $en$Select language$en$,
   $ja$言語の選択$ja$,
@@ -155,7 +158,7 @@ insert into public.guide_steps (
   $ja$インストールに使用する言語を選択します。$ja$
 ),
 (
-  'install', 4, '/images/panduan_wireless/1.4.png', false,
+  'proyektor', 4, '/images/panduan_wireless/1.4.png', false,
   $id$Klik Next$id$,
   $en$Click Next$en$,
   $ja$「Next」をクリック$ja$,
@@ -164,7 +167,7 @@ insert into public.guide_steps (
   $ja$「Next」ボタンをクリックして進みます。$ja$
 ),
 (
-  'install', 5, '/images/panduan_wireless/1.5.png', false,
+  'proyektor', 5, '/images/panduan_wireless/1.5.png', false,
   $id$Persetujuan Lisensi$id$,
   $en$License Agreement$en$,
   $ja$ライセンス契約の同意$ja$,
@@ -173,7 +176,7 @@ insert into public.guide_steps (
   $ja$「Yes」を選択してライセンス契約に同意します。$ja$
 ),
 (
-  'install', 6, '/images/panduan_wireless/1.6.png', false,
+  'proyektor', 6, '/images/panduan_wireless/1.6.png', false,
   $id$Pilih Edisi Standar$id$,
   $en$Select Standard Edition$en$,
   $ja$Standard Editionの選択$ja$,
@@ -182,7 +185,7 @@ insert into public.guide_steps (
   $ja$インストールオプションで「Standard Edition」を選択します。$ja$
 ),
 (
-  'install', 7, '/images/panduan_wireless/1.7.png', true,
+  'proyektor', 7, '/images/panduan_wireless/1.7.png', true,
   $id$Selesaikan Instalasi$id$,
   $en$Complete Installation$en$,
   $ja$インストールの完了$ja$,
@@ -191,7 +194,7 @@ insert into public.guide_steps (
   $ja$インストールプロセスが完了するまで待ちます。$ja$
 ),
 (
-  'connect', 1, '/images/panduan_wireless/2.1.jpeg', false,
+  'proyektor', 8, '/images/panduan_wireless/2.1.jpeg', false,
   $id$Buka aplikasi$id$,
   $en$Open application$en$,
   $ja$アプリの起動$ja$,
@@ -200,7 +203,7 @@ insert into public.guide_steps (
   $ja$Epson iProjection V.4.10 アプリを起動します。$ja$
 ),
 (
-  'connect', 2, '/images/panduan_wireless/2.2.png', false,
+  'proyektor', 9, '/images/panduan_wireless/2.2.png', false,
   $id$Persetujuan Privasi$id$,
   $en$Privacy Statement$en$,
   $ja$プライバシーポリシーへの同意$ja$,
@@ -209,7 +212,7 @@ insert into public.guide_steps (
   $ja$プライバシーステートメント画面で「Agree」を選択します。$ja$
 ),
 (
-  'connect', 3, '/images/panduan_wireless/2.3.png', false,
+  'proyektor', 10, '/images/panduan_wireless/2.3.png', false,
   $id$Partisipasi Survei$id$,
   $en$Survey Participation$en$,
   $ja$アンケートへの回答$ja$,
@@ -218,7 +221,7 @@ insert into public.guide_steps (
   $ja$エプソンのアンケートで「Allow」を選択します。$ja$
 ),
 (
-  'connect', 4, '/images/panduan_wireless/2.4.png', false,
+  'proyektor', 11, '/images/panduan_wireless/2.4.png', false,
   $id$Pilih Advanced Connection$id$,
   $en$Select Advanced Connection$en$,
   $ja$Advanced Connectionの選択$ja$,
@@ -227,7 +230,7 @@ insert into public.guide_steps (
   $ja$接続モードで「Advanced connection」を選択します。$ja$
 ),
 (
-  'connect', 5, '/images/panduan_wireless/2.5.png', false,
+  'proyektor', 12, '/images/panduan_wireless/2.5.png', false,
   $id$Nonaktifkan Firewall$id$,
   $en$Disable Firewall$en$,
   $ja$ファイアウォールの無効化$ja$,
@@ -236,7 +239,7 @@ insert into public.guide_steps (
   $ja$「Yes」を選択してファイアウォールを無効化します。$ja$
 ),
 (
-  'connect', 6, '/images/panduan_wireless/2.6.png', false,
+  'proyektor', 13, '/images/panduan_wireless/2.6.png', false,
   $id$Konfirmasi Buka Aplikasi$id$,
   $en$Confirm Open App$en$,
   $ja$アプリ起動の確認$ja$,
@@ -245,7 +248,7 @@ insert into public.guide_steps (
   $ja$「Yes」を選択してアプリの起動を確定します。$ja$
 ),
 (
-  'connect', 7, '/images/panduan_wireless/2.7.png', true,
+  'proyektor', 14, '/images/panduan_wireless/2.7.png', true,
   $id$Pencarian Manual & Masukkan IP$id$,
   $en$Manual Search & Enter IP$en$,
   $ja$手動検索とIPアドレス入力$ja$,
