@@ -44,14 +44,29 @@ alter table public.guide_steps enable row level security;
 drop policy if exists "public read settings" on public.settings;
 drop policy if exists "public read rooms" on public.rooms;
 drop policy if exists "public read guide steps" on public.guide_steps;
+drop policy if exists "admin all settings" on public.settings;
+drop policy if exists "admin all rooms" on public.rooms;
+drop policy if exists "admin all guide steps" on public.guide_steps;
 
 create policy "public read settings" on public.settings for select to anon, authenticated using (true);
 create policy "public read rooms" on public.rooms for select to anon, authenticated using (true);
 create policy "public read guide steps" on public.guide_steps for select to anon, authenticated using (true);
 
-grant usage on schema public to anon, authenticated;
-grant select on public.settings, public.rooms, public.guide_steps to anon, authenticated;
+create policy "admin all settings" on public.settings for all to authenticated using (true) with check (true);
+create policy "admin all rooms" on public.rooms for all to authenticated using (true) with check (true);
+create policy "admin all guide steps" on public.guide_steps for all to authenticated using (true) with check (true);
 
+grant usage on schema public to anon, authenticated;
+grant all on public.settings, public.rooms, public.guide_steps to anon, authenticated;
+
+-- Storage setup
+insert into storage.buckets (id, name, public) values ('images', 'images', true) on conflict (id) do nothing;
+drop policy if exists "public read images" on storage.objects;
+drop policy if exists "admin all images" on storage.objects;
+create policy "public read images" on storage.objects for select to anon, authenticated using (bucket_id = 'images');
+create policy "admin all images" on storage.objects for all to authenticated using (bucket_id = 'images') with check (bucket_id = 'images');
+
+-- Seed data
 insert into public.settings (
   id, wifi_ssid, wifi_password, qr_url, installer_path, installer_filename,
   projector_note_id, projector_note_en, projector_note_ja
@@ -59,7 +74,7 @@ insert into public.settings (
   1,
   'OneOtsukaID-Guest',
   'Network123!',
-  'https://tinyurl.com/connect-guest',
+  'https://guidline-loc-rooms.vercel.app/',
   '/images/iprov410win_web.exe',
   'iProV410Win_Web.exe',
   $id$Jika gambar tidak muncul setelah semua langkah, coba restart proyektor. Untuk bantuan hubungi Department Information Technology Team di ext. 1100.$id$,
@@ -213,3 +228,7 @@ insert into public.guide_steps (
   $en$Select "Manual Search" and enter the projector's IP Address.$en$,
   $ja$「Manual Search」を選択し、会議室のプロジェクターのIPアドレスを入力します。$ja$
 );
+
+-- Note: Untuk auth, jalankan query ini di SQL Editor Supabase untuk membuat user (jika belum ada)
+-- Atau gunakan fitur Sign Up di dashboard Supabase.
+-- admin@otsuka.id / Loc?1234

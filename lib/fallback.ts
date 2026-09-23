@@ -203,7 +203,7 @@ export const fallbackContent: GuideContent = {
   settings: {
     wifiSsid: "OneOtsukaID-Guest",
     wifiPassword: "Network123!",
-    qrUrl: "https://tinyurl.com/connect-guest",
+    qrUrl: "https://guidline-loc-rooms.vercel.app/",
     installerPath: "/images/iprov410win_web.exe",
     installerFilename: "iProV410Win_Web.exe",
     projectorNote: {
