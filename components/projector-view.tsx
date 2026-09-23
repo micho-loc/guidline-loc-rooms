@@ -48,38 +48,10 @@ export function ProjectorView({ content, categorySlug }: { content: GuideContent
           <>
             <div className="bg-white border border-slate-100 rounded-2xl p-5 sm:p-6 flex flex-col mb-6">
               <h3 className="text-ocean-800 font-bold text-base flex items-center gap-2 border-b border-slate-100 pb-3 mb-5">
-                <i className="fa-solid fa-download text-cyan-mid" />
-                <T k="projSectionInstall" />
+                <i className="fa-solid fa-list-ol text-cyan-mid" />
+                Panduan
               </h3>
-              <div className="p-4 bg-cyan-light/40 border border-cyan-100 rounded-xl mb-6 flex items-start gap-3">
-                <div className="text-cyan-deep text-lg mt-0.5">
-                  <i className="fa-solid fa-cloud-arrow-down" />
-                </div>
-                <div className="flex-1">
-                  <span className="text-slate-600 text-xs font-semibold uppercase tracking-wider block mb-1">
-                    <T k="downloadLabel" />
-                  </span>
-                  <span className="text-slate-500 text-xs leading-relaxed block">
-                    <T k="downloadInstruction" />{" "}
-                    <a
-                      href={settings.installerPath}
-                      download
-                      className="text-cyan-deep hover:underline font-bold break-all"
-                    >
-                      Download {settings.installerFilename}
-                    </a>
-                  </span>
-                </div>
-              </div>
-              <Steps items={installSteps} />
-            </div>
-
-            <div className="bg-white border border-slate-100 rounded-2xl p-5 sm:p-6 flex flex-col mb-6">
-              <h3 className="text-ocean-800 font-bold text-base flex items-center gap-2 border-b border-slate-100 pb-3 mb-5">
-                <i className="fa-solid fa-link text-cyan-mid" />
-                <T k="projSectionConnect" />
-              </h3>
-              <Steps items={connectSteps} />
+              <Steps items={steps} />
             </div>
 
             <div className="bg-white border border-slate-100 rounded-2xl p-5 sm:p-6 flex flex-col gap-4">
