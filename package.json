@@ -15,7 +15,8 @@
     "pg": "^8.23.0",
     "qr-code-styling": "^1.9.2",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "sweetalert2": "^11.26.25"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.13",

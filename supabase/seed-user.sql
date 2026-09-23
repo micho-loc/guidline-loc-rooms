@@ -3,20 +3,25 @@
 -- Email: admin@otsuka.id
 -- Password: Loc?1234
 
+-- Pastikan ekstensi pgcrypto aktif
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 DO $$
 DECLARE
   target_user_id uuid;
   new_user_id uuid := gen_random_uuid();
 BEGIN
-  -- 1. Hapus user lama jika ada
+  -- 1. Hapus user lama jika ada (beserta relasinya)
   SELECT id INTO target_user_id FROM auth.users WHERE email = 'admin@otsuka.id';
   
   IF target_user_id IS NOT NULL THEN
+    DELETE FROM auth.sessions WHERE user_id = target_user_id;
+    DELETE FROM auth.refresh_tokens WHERE user_id = target_user_id::text;
     DELETE FROM auth.identities WHERE user_id = target_user_id;
     DELETE FROM auth.users WHERE id = target_user_id;
   END IF;
 
-  -- 2. Buat user baru
+  -- 2. Buat user baru dengan enkripsi yang benar
   INSERT INTO auth.users (
     instance_id,
     id,
@@ -28,7 +33,11 @@ BEGIN
     raw_app_meta_data,
     raw_user_meta_data,
     created_at,
-    updated_at
+    updated_at,
+    confirmation_token,
+    email_change,
+    email_change_token_new,
+    recovery_token
   ) VALUES (
     '00000000-0000-0000-0000-000000000000',
     new_user_id,
@@ -40,7 +49,11 @@ BEGIN
     '{"provider":"email","providers":["email"]}',
     '{}',
     now(),
-    now()
+    now(),
+    '',
+    '',
+    '',
+    ''
   );
 
   -- 3. Buat identity baru
@@ -50,14 +63,16 @@ BEGIN
     provider_id,
     identity_data,
     provider,
+    last_sign_in_at,
     created_at,
     updated_at
   ) VALUES (
     gen_random_uuid(),
     new_user_id,
     new_user_id::text,
-    jsonb_build_object('sub', new_user_id::text, 'email', 'admin@otsuka.id'),
+    format('{"sub":"%s","email":"%s"}', new_user_id::text, 'admin@otsuka.id')::jsonb,
     'email',
+    now(),
     now(),
     now()
   );

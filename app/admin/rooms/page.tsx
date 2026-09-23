@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { getSupabase } from "@/lib/supabase";
+import Swal from "sweetalert2";
 
 export default function AdminRoomsPage() {
   const [rooms, setRooms] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetchRooms();
@@ -33,11 +33,33 @@ export default function AdminRoomsPage() {
       setRooms(rooms.filter((_, i) => i !== index));
       return;
     }
-    if (!confirm("Hapus ruangan ini?")) return;
+    
+    const result = await Swal.fire({
+      title: "Hapus Ruangan?",
+      text: "Data ruangan ini akan dihapus secara permanen.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#0a4c8c",
+      cancelButtonColor: "#ef4444",
+      confirmButtonText: "Ya, Hapus",
+      cancelButtonText: "Batal"
+    });
+
+    if (!result.isConfirmed) return;
     
     const supabase = getSupabase();
     if (!supabase) return;
     await supabase.from("rooms").delete().eq("id", id);
+    
+    Swal.fire({
+      title: "Terhapus!",
+      text: "Ruangan berhasil dihapus.",
+      icon: "success",
+      confirmButtonColor: "#0a4c8c",
+      timer: 1500,
+      showConfirmButton: false
+    });
+    
     fetchRooms();
   };
 
@@ -49,7 +71,6 @@ export default function AdminRoomsPage() {
 
   const handleSave = async () => {
     setSaving(true);
-    setMessage("");
     const supabase = getSupabase();
     if (!supabase) return;
 
@@ -69,13 +90,24 @@ export default function AdminRoomsPage() {
           }).eq("id", room.id);
         }
       }
-      setMessage("Berhasil disimpan!");
+      Swal.fire({
+        title: "Berhasil!",
+        text: "Perubahan ruangan berhasil disimpan.",
+        icon: "success",
+        confirmButtonColor: "#0a4c8c",
+        timer: 1500,
+        showConfirmButton: false
+      });
       fetchRooms();
     } catch (err: any) {
-      setMessage("Gagal menyimpan: " + err.message);
+      Swal.fire({
+        title: "Gagal!",
+        text: "Gagal menyimpan: " + err.message,
+        icon: "error",
+        confirmButtonColor: "#ef4444"
+      });
     }
     setSaving(false);
-    setTimeout(() => setMessage(""), 3000);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -96,12 +128,6 @@ export default function AdminRoomsPage() {
           <i className="fa-solid fa-plus mr-2" /> Tambah Ruangan
         </button>
       </div>
-
-      {message && (
-        <div className={`p-4 rounded-xl mb-6 text-sm font-semibold ${message.includes("Gagal") ? "bg-red-50 text-red-600" : "bg-green-50 text-green-600"}`}>
-          {message}
-        </div>
-      )}
 
       <div className="space-y-4">
         {rooms.map((room, index) => (

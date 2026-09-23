@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { getSupabase } from "@/lib/supabase";
+import Swal from "sweetalert2";
 
 export default function AdminStepsPage() {
   const [steps, setSteps] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState("");
   const [sectionFilter, setSectionFilter] = useState("install");
 
   useEffect(() => {
@@ -47,11 +47,33 @@ export default function AdminStepsPage() {
       setSteps(steps.filter((_, i) => i !== index));
       return;
     }
-    if (!confirm("Hapus step ini?")) return;
+    
+    const result = await Swal.fire({
+      title: "Hapus Step?",
+      text: "Step ini akan dihapus secara permanen.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#0a4c8c",
+      cancelButtonColor: "#ef4444",
+      confirmButtonText: "Ya, Hapus",
+      cancelButtonText: "Batal"
+    });
+
+    if (!result.isConfirmed) return;
     
     const supabase = getSupabase();
     if (!supabase) return;
     await supabase.from("guide_steps").delete().eq("id", id);
+    
+    Swal.fire({
+      title: "Terhapus!",
+      text: "Step berhasil dihapus.",
+      icon: "success",
+      confirmButtonColor: "#0a4c8c",
+      timer: 1500,
+      showConfirmButton: false
+    });
+    
     fetchSteps();
   };
 
@@ -69,23 +91,42 @@ export default function AdminStepsPage() {
     const fileName = `${Math.random()}.${fileExt}`;
     const filePath = `steps/${fileName}`;
 
-    setMessage("Mengunggah gambar...");
+    Swal.fire({
+      title: "Mengunggah...",
+      text: "Mohon tunggu sebentar.",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
     const { error: uploadError } = await supabase.storage.from('images').upload(filePath, file);
 
     if (uploadError) {
-      setMessage("Gagal upload: " + uploadError.message);
+      Swal.fire({
+        title: "Gagal Upload!",
+        text: uploadError.message,
+        icon: "error",
+        confirmButtonColor: "#ef4444"
+      });
       return;
     }
 
     const { data } = supabase.storage.from('images').getPublicUrl(filePath);
     handleChange(index, "image_path", data.publicUrl);
-    setMessage("Gambar berhasil diunggah!");
-    setTimeout(() => setMessage(""), 3000);
+    
+    Swal.fire({
+      title: "Berhasil!",
+      text: "Gambar berhasil diunggah.",
+      icon: "success",
+      confirmButtonColor: "#0a4c8c",
+      timer: 1500,
+      showConfirmButton: false
+    });
   };
 
   const handleSave = async () => {
     setSaving(true);
-    setMessage("");
     const supabase = getSupabase();
     if (!supabase) return;
 
@@ -110,13 +151,24 @@ export default function AdminStepsPage() {
           await supabase.from("guide_steps").update(payload).eq("id", step.id);
         }
       }
-      setMessage("Berhasil disimpan!");
+      Swal.fire({
+        title: "Berhasil!",
+        text: "Perubahan step berhasil disimpan.",
+        icon: "success",
+        confirmButtonColor: "#0a4c8c",
+        timer: 1500,
+        showConfirmButton: false
+      });
       fetchSteps();
     } catch (err: any) {
-      setMessage("Gagal menyimpan: " + err.message);
+      Swal.fire({
+        title: "Gagal!",
+        text: "Gagal menyimpan: " + err.message,
+        icon: "error",
+        confirmButtonColor: "#ef4444"
+      });
     }
     setSaving(false);
-    setTimeout(() => setMessage(""), 3000);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -150,12 +202,6 @@ export default function AdminStepsPage() {
           </button>
         </div>
       </div>
-
-      {message && (
-        <div className={`p-4 rounded-xl mb-6 text-sm font-semibold ${message.includes("Gagal") ? "bg-red-50 text-red-600" : "bg-green-50 text-green-600"}`}>
-          {message}
-        </div>
-      )}
 
       <div className="space-y-6">
         {filteredSteps.map((step) => {

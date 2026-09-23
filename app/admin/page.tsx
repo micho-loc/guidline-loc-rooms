@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { getSupabase } from "@/lib/supabase";
+import Swal from "sweetalert2";
 
 export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetchSettings();
@@ -24,7 +24,6 @@ export default function AdminSettingsPage() {
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
-    setMessage("");
     const supabase = getSupabase();
     if (!supabase) return;
 
@@ -51,10 +50,21 @@ export default function AdminSettingsPage() {
 
     setSaving(false);
     if (error) {
-      setMessage("Gagal menyimpan: " + error.message);
+      Swal.fire({
+        title: "Gagal!",
+        text: "Gagal menyimpan: " + error.message,
+        icon: "error",
+        confirmButtonColor: "#ef4444"
+      });
     } else {
-      setMessage("Berhasil disimpan!");
-      setTimeout(() => setMessage(""), 3000);
+      Swal.fire({
+        title: "Berhasil!",
+        text: "Pengaturan berhasil disimpan.",
+        icon: "success",
+        confirmButtonColor: "#0a4c8c",
+        timer: 1500,
+        showConfirmButton: false
+      });
     }
   }
 
@@ -70,12 +80,6 @@ export default function AdminSettingsPage() {
         <h2 className="text-2xl font-display font-bold text-ocean-800">General Settings</h2>
       </div>
       
-      {message && (
-        <div className={`p-4 rounded-xl mb-6 text-sm font-semibold ${message.includes("Gagal") ? "bg-red-50 text-red-600" : "bg-green-50 text-green-600"}`}>
-          {message}
-        </div>
-      )}
-
       <form onSubmit={handleSave} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>

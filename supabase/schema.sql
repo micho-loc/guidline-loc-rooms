@@ -22,6 +22,14 @@ create table if not exists public.settings (
   updated_at timestamptz not null default now()
 );
 
+-- Pastikan kolom baru ada jika tabel sudah dibuat sebelumnya
+ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS qr_title_id text not null default 'Scan QR Code';
+ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS qr_title_en text not null default 'Scan QR Code';
+ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS qr_title_ja text not null default 'QRコードをスキャン';
+ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS qr_subtitle_id text not null default 'Akses cepat ke panduan koneksi ruang rapat.';
+ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS qr_subtitle_en text not null default 'Quick access to the meeting room connection guide.';
+ALTER TABLE public.settings ADD COLUMN IF NOT EXISTS qr_subtitle_ja text not null default '会議室の接続ガイドへのクイックアクセス。';
+
 create table if not exists public.rooms (
   id uuid primary key default gen_random_uuid(),
   name text not null,
