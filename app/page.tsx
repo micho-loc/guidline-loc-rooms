@@ -1,10 +1,14 @@
 import { HomeView } from "@/components/home-view";
 import { SiteChrome } from "@/components/site-chrome";
+import { getGuideContent } from "@/lib/content";
 
-export default function HomePage() {
+export const revalidate = 60;
+
+export default async function HomePage() {
+  const content = await getGuideContent();
   return (
     <SiteChrome>
-      <HomeView />
+      <HomeView categories={content.categories} />
     </SiteChrome>
   );
 }

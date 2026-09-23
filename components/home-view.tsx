@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { T, useLang } from "@/components/language";
+import { pick } from "@/lib/content";
+import type { Category } from "@/lib/types";
 
-export function HomeView() {
-  const { href } = useLang();
+export function HomeView({ categories }: { categories: Category[] }) {
+  const { lang, href } = useLang();
   return (
     <main className="flex-1 flex flex-col items-center px-4 pb-12">
       <section className="w-full max-w-2xl mt-6">
@@ -20,46 +22,29 @@ export function HomeView() {
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Link
-            href={href("/wifi")}
-            className="choice-card bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 flex flex-col gap-4"
-          >
-            <div className="icon-circle bg-ocean-50 text-ocean-500">
-              <i className="fa-solid fa-wifi" />
-            </div>
-            <div className="flex-1">
-              <h2 className="text-ocean-800 font-semibold text-lg mb-1">
-                <T k="wifiTitle" />
-              </h2>
-              <p className="text-slate-400 text-sm leading-relaxed">
-                <T k="wifiDesc" />
-              </p>
-            </div>
-            <div className="flex items-center gap-2 text-cyan-deep text-sm font-medium mt-1">
-              <T k="startGuide" />
-              <i className="fa-solid fa-arrow-right text-xs" />
-            </div>
-          </Link>
-          <Link
-            href={href("/proyektor")}
-            className="choice-card bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 flex flex-col gap-4"
-          >
-            <div className="icon-circle bg-ocean-50 text-ocean-500">
-              <i className="fa-solid fa-display" />
-            </div>
-            <div className="flex-1">
-              <h2 className="text-ocean-800 font-semibold text-lg mb-1">
-                <T k="projTitle" />
-              </h2>
-              <p className="text-slate-400 text-sm leading-relaxed">
-                <T k="projDesc" />
-              </p>
-            </div>
-            <div className="flex items-center gap-2 text-cyan-deep text-sm font-medium mt-1">
-              <T k="startGuide" />
-              <i className="fa-solid fa-arrow-right text-xs" />
-            </div>
-          </Link>
+          {categories.map((cat) => (
+            <Link
+              key={cat.id}
+              href={href(`/${cat.slug}`)}
+              className="choice-card bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 flex flex-col gap-4"
+            >
+              <div className="icon-circle bg-ocean-50 text-ocean-500">
+                <i className={`fa-solid ${cat.icon}`} />
+              </div>
+              <div className="flex-1">
+                <h2 className="text-ocean-800 font-semibold text-lg mb-1">
+                  {pick(cat.title, lang)}
+                </h2>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  {pick(cat.description, lang)}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 text-cyan-deep text-sm font-medium mt-1">
+                <T k="startGuide" />
+                <i className="fa-solid fa-arrow-right text-xs" />
+              </div>
+            </Link>
+          ))}
         </div>
         <p className="text-center text-slate-400 text-xs mt-8">
           <i className="fa-regular fa-clock mr-1" />

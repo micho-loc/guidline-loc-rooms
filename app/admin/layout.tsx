@@ -19,6 +19,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const navs = [
     { name: "Settings", href: "/admin", icon: "fa-gear" },
+    { name: "Categories", href: "/admin/categories", icon: "fa-layer-group" },
     { name: "Rooms", href: "/admin/rooms", icon: "fa-door-open" },
     { name: "Guide Steps", href: "/admin/steps", icon: "fa-list-ol" },
   ];

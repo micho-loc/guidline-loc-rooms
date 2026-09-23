@@ -228,4 +228,30 @@ export const fallbackContent: GuideContent = {
     { id: "room-3", name: "Meeting Room 3", ipAddress: "10.3.171.33", sortOrder: 3 },
   ],
   steps: [...withMeta("install", install), ...withMeta("connect", connect)],
+  categories: [
+    {
+      id: "cat-wifi",
+      slug: "wifi",
+      icon: "fa-wifi",
+      sortOrder: 1,
+      title: { id: "Koneksi Wi-Fi", en: "Wi-Fi Connection", ja: "Wi-Fi 接続" },
+      description: {
+        id: "Hubungkan laptop, tablet, atau smartphone ke jaringan nirkabel kantor.",
+        en: "Connect your laptop, tablet, or smartphone to the office wireless network.",
+        ja: "ノートパソコン、タブレット、スマートフォンをオフィスの無線ネットワークに接続します。",
+      },
+    },
+    {
+      id: "cat-proyektor",
+      slug: "proyektor",
+      icon: "fa-display",
+      sortOrder: 2,
+      title: { id: "Koneksi Proyektor", en: "Projector Connection", ja: "プロジェクター接続" },
+      description: {
+        id: "Sambungkan laptop ke proyektor ruang rapat secara wireless.",
+        en: "Connect your laptop to the meeting room projector wirelessly.",
+        ja: "ワイヤレスで会議室のプロジェクターに接続します。",
+      },
+    },
+  ],
 };

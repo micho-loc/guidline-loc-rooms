@@ -6,19 +6,31 @@ import Swal from "sweetalert2";
 
 export default function AdminStepsPage() {
   const [steps, setSteps] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [sectionFilter, setSectionFilter] = useState("install");
+  const [sectionFilter, setSectionFilter] = useState("");
 
   useEffect(() => {
-    fetchSteps();
+    fetchData();
   }, []);
 
-  async function fetchSteps() {
+  async function fetchData() {
     const supabase = getSupabase();
     if (!supabase) return;
-    const { data } = await supabase.from("guide_steps").select("*").order("sort_order", { ascending: true });
-    if (data) setSteps(data);
+    
+    const [stepsRes, catsRes] = await Promise.all([
+      supabase.from("guide_steps").select("*").order("sort_order", { ascending: true }),
+      supabase.from("categories").select("*").order("sort_order", { ascending: true })
+    ]);
+
+    if (stepsRes.data) setSteps(stepsRes.data);
+    if (catsRes.data && catsRes.data.length > 0) {
+      setCategories(catsRes.data);
+      if (!sectionFilter) {
+        setSectionFilter(catsRes.data[0].slug);
+      }
+    }
     setLoading(false);
   }
 
@@ -74,7 +86,7 @@ export default function AdminStepsPage() {
       showConfirmButton: false
     });
     
-    fetchSteps();
+    fetchData();
   };
 
   const handleChange = (index: number, field: string, value: any) => {
@@ -159,7 +171,7 @@ export default function AdminStepsPage() {
         timer: 1500,
         showConfirmButton: false
       });
-      fetchSteps();
+      fetchData();
     } catch (err: any) {
       Swal.fire({
         title: "Gagal!",
@@ -191,8 +203,9 @@ export default function AdminStepsPage() {
             onChange={(e) => setSectionFilter(e.target.value)}
             className="flex-1 sm:flex-none px-4 py-2 border border-slate-200 rounded-xl outline-none text-sm font-semibold text-slate-700 bg-white shadow-sm"
           >
-            <option value="install">Instalasi (Install)</option>
-            <option value="connect">Koneksi (Connect)</option>
+            {categories.map(cat => (
+              <option key={cat.id} value={cat.slug}>{cat.title_id}</option>
+            ))}
           </select>
           <button
             onClick={handleAdd}

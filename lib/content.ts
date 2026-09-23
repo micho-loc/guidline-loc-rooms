@@ -1,6 +1,6 @@
 import { fallbackContent } from "@/lib/fallback";
 import { getSupabase } from "@/lib/supabase";
-import type { GuideContent, GuideStep, Lang, Localized, Room } from "@/lib/types";
+import type { GuideContent, GuideStep, Lang, Localized, Room, Category } from "@/lib/types";
 
 type SettingsRow = {
   wifi_ssid: string;
@@ -28,7 +28,7 @@ type RoomRow = {
 
 type StepRow = {
   id: string;
-  section: "install" | "connect";
+  section: string;
   sort_order: number;
   image_path: string | null;
   is_final: boolean;
@@ -38,6 +38,19 @@ type StepRow = {
   body_id: string;
   body_en: string;
   body_ja: string;
+};
+
+type CategoryRow = {
+  id: string;
+  slug: string;
+  icon: string;
+  sort_order: number;
+  title_id: string;
+  title_en: string;
+  title_ja: string;
+  description_id: string;
+  description_en: string;
+  description_ja: string;
 };
 
 function localized(id: string, en: string, ja: string): Localized {
@@ -65,11 +78,22 @@ function mapStep(row: StepRow): GuideStep {
   };
 }
 
+function mapCategory(row: CategoryRow): Category {
+  return {
+    id: row.id,
+    slug: row.slug,
+    icon: row.icon,
+    sortOrder: row.sort_order,
+    title: localized(row.title_id, row.title_en, row.title_ja),
+    description: localized(row.description_id, row.description_en, row.description_ja),
+  };
+}
+
 export async function getGuideContent(): Promise<GuideContent> {
   const supabase = getSupabase();
   if (!supabase) return fallbackContent;
 
-  const [settingsRes, roomsRes, stepsRes] = await Promise.all([
+  const [settingsRes, roomsRes, stepsRes, categoriesRes] = await Promise.all([
     supabase.from("settings").select("*").eq("id", 1).maybeSingle(),
     supabase.from("rooms").select("*").order("sort_order", { ascending: true }),
     supabase
@@ -77,6 +101,7 @@ export async function getGuideContent(): Promise<GuideContent> {
       .select("*")
       .order("section", { ascending: false })
       .order("sort_order", { ascending: true }),
+    supabase.from("categories").select("*").order("sort_order", { ascending: true }),
   ]);
 
   if (
@@ -85,7 +110,9 @@ export async function getGuideContent(): Promise<GuideContent> {
     roomsRes.error ||
     !roomsRes.data ||
     stepsRes.error ||
-    !stepsRes.data
+    !stepsRes.data ||
+    categoriesRes.error ||
+    !categoriesRes.data
   ) {
     return fallbackContent;
   }
@@ -117,6 +144,7 @@ export async function getGuideContent(): Promise<GuideContent> {
     },
     rooms: (roomsRes.data as RoomRow[]).map(mapRoom),
     steps: (stepsRes.data as StepRow[]).map(mapStep),
+    categories: (categoriesRes.data as CategoryRow[]).map(mapCategory),
   };
 }
 

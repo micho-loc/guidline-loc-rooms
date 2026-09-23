@@ -254,6 +254,37 @@ insert into public.guide_steps (
   $ja$「Manual Search」を選択し、会議室のプロジェクターのIPアドレスを入力します。$ja$
 );
 
--- Note: Untuk auth, jalankan query ini di SQL Editor Supabase untuk membuat user (jika belum ada)
--- Atau gunakan fitur Sign Up di dashboard Supabase.
--- admin@otsuka.id / Loc?1234
+create table if not exists public.categories (
+  id uuid primary key default gen_random_uuid(),
+  slug text not null unique,
+  icon text not null default 'fa-circle-info',
+  sort_order int not null default 0,
+  title_id text not null,
+  title_en text not null,
+  title_ja text not null,
+  description_id text not null,
+  description_en text not null,
+  description_ja text not null
+);
+
+alter table public.categories enable row level security;
+drop policy if exists "public read categories" on public.categories;
+drop policy if exists "admin all categories" on public.categories;
+create policy "public read categories" on public.categories for select to anon, authenticated using (true);
+create policy "admin all categories" on public.categories for all to authenticated using (true) with check (true);
+grant all on public.categories to anon, authenticated;
+
+-- Seed Categories
+insert into public.categories (slug, icon, sort_order, title_id, title_en, title_ja, description_id, description_en, description_ja)
+values
+('wifi', 'fa-wifi', 1, 'Koneksi Wi-Fi', 'Wi-Fi Connection', 'Wi-Fi 接続', 'Hubungkan laptop, tablet, atau smartphone ke jaringan nirkabel kantor.', 'Connect your laptop, tablet, or smartphone to the office wireless network.', 'ノートパソコン、タブレット、スマートフォンをオフィスの無線ネットワークに接続します。'),
+('proyektor', 'fa-display', 2, 'Koneksi Proyektor', 'Projector Connection', 'プロジェクター接続', 'Sambungkan laptop ke proyektor ruang rapat secara wireless.', 'Connect your laptop to the meeting room projector wirelessly.', 'ワイヤレスで会議室のプロジェクターに接続します。')
+on conflict (slug) do update set
+  icon = excluded.icon,
+  sort_order = excluded.sort_order,
+  title_id = excluded.title_id,
+  title_en = excluded.title_en,
+  title_ja = excluded.title_ja,
+  description_id = excluded.description_id,
+  description_en = excluded.description_en,
+  description_ja = excluded.description_ja;
