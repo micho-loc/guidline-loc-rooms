@@ -187,6 +187,13 @@ export default function AdminStepsPage() {
 
   const filteredSteps = steps.filter(s => s.section === sectionFilter).sort((a, b) => a.sort_order - b.sort_order);
 
+  // Gabungkan kategori dari database dengan section hardcoded yang mungkin masih ada di data lama
+  const allSections = [
+    ...categories.map(c => ({ slug: c.slug, title: c.title_id })),
+    { slug: "install", title: "Instalasi (Legacy)" },
+    { slug: "connect", title: "Koneksi (Legacy)" }
+  ];
+
   return (
     <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-xl border border-slate-200/80 p-6 md:p-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
@@ -203,8 +210,8 @@ export default function AdminStepsPage() {
             onChange={(e) => setSectionFilter(e.target.value)}
             className="flex-1 sm:flex-none px-4 py-2 border border-slate-200 rounded-xl outline-none text-sm font-semibold text-slate-700 bg-white shadow-sm"
           >
-            {categories.map(cat => (
-              <option key={cat.id} value={cat.slug}>{cat.title_id}</option>
+            {allSections.map(sec => (
+              <option key={sec.slug} value={sec.slug}>{sec.title}</option>
             ))}
           </select>
           <button
