@@ -62,8 +62,13 @@ export default function AdminSettingsPage() {
   if (!settings) return <div>Data tidak ditemukan</div>;
 
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 md:p-8">
-      <h2 className="text-2xl font-display font-bold text-ocean-800 mb-6">General Settings</h2>
+    <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-xl border border-slate-200/80 p-6 md:p-8">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 rounded-xl bg-ocean-50 text-ocean-600 flex items-center justify-center text-lg">
+          <i className="fa-solid fa-gear" />
+        </div>
+        <h2 className="text-2xl font-display font-bold text-ocean-800">General Settings</h2>
+      </div>
       
       {message && (
         <div className={`p-4 rounded-xl mb-6 text-sm font-semibold ${message.includes("Gagal") ? "bg-red-50 text-red-600" : "bg-green-50 text-green-600"}`}>

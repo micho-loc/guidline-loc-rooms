@@ -81,12 +81,17 @@ export default function AdminRoomsPage() {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 md:p-8">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-display font-bold text-ocean-800">Rooms Setup</h2>
+    <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-xl border border-slate-200/80 p-6 md:p-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-ocean-50 text-ocean-600 flex items-center justify-center text-lg">
+            <i className="fa-solid fa-door-open" />
+          </div>
+          <h2 className="text-2xl font-display font-bold text-ocean-800">Rooms Setup</h2>
+        </div>
         <button
           onClick={handleAdd}
-          className="px-4 py-2 bg-ocean-50 text-ocean-700 hover:bg-ocean-100 font-bold rounded-xl text-sm transition-colors"
+          className="px-4 py-2 bg-white border border-slate-200 text-ocean-700 hover:border-ocean-400 hover:bg-ocean-50/50 font-bold rounded-xl text-sm transition-all shadow-sm flex items-center"
         >
           <i className="fa-solid fa-plus mr-2" /> Tambah Ruangan
         </button>

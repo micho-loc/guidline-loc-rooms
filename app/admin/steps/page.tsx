@@ -124,22 +124,27 @@ export default function AdminStepsPage() {
   const filteredSteps = steps.filter(s => s.section === sectionFilter).sort((a, b) => a.sort_order - b.sort_order);
 
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 md:p-8">
+    <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-xl border border-slate-200/80 p-6 md:p-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <h2 className="text-2xl font-display font-bold text-ocean-800">Guide Steps</h2>
-        
         <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-ocean-50 text-ocean-600 flex items-center justify-center text-lg">
+            <i className="fa-solid fa-list-ol" />
+          </div>
+          <h2 className="text-2xl font-display font-bold text-ocean-800">Guide Steps</h2>
+        </div>
+        
+        <div className="flex items-center gap-3 w-full sm:w-auto">
           <select 
             value={sectionFilter} 
             onChange={(e) => setSectionFilter(e.target.value)}
-            className="px-4 py-2 border border-slate-200 rounded-xl outline-none text-sm font-semibold text-slate-700 bg-slate-50"
+            className="flex-1 sm:flex-none px-4 py-2 border border-slate-200 rounded-xl outline-none text-sm font-semibold text-slate-700 bg-white shadow-sm"
           >
             <option value="install">Instalasi (Install)</option>
             <option value="connect">Koneksi (Connect)</option>
           </select>
           <button
             onClick={handleAdd}
-            className="px-4 py-2 bg-ocean-50 text-ocean-700 hover:bg-ocean-100 font-bold rounded-xl text-sm transition-colors whitespace-nowrap"
+            className="px-4 py-2 bg-white border border-slate-200 text-ocean-700 hover:border-ocean-400 hover:bg-ocean-50/50 font-bold rounded-xl text-sm transition-all shadow-sm whitespace-nowrap flex items-center"
           >
             <i className="fa-solid fa-plus mr-2" /> Tambah Step
           </button>
@@ -280,7 +285,7 @@ export default function AdminStepsPage() {
         })}
       </div>
 
-      <div className="flex justify-end pt-6 mt-6 border-t border-slate-100 sticky bottom-0 bg-white p-4 -mx-4 -mb-4 border-t-2 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)]">
+      <div className="flex justify-end pt-6 mt-6 border-t border-slate-100 sticky bottom-0 bg-white/90 backdrop-blur p-4 -mx-4 -mb-4 border-t-2 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)] rounded-b-3xl">
         <button
           onClick={handleSave}
           disabled={saving}
