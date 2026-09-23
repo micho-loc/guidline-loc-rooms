@@ -204,6 +204,16 @@ export const fallbackContent: GuideContent = {
     wifiSsid: "OneOtsukaID-Guest",
     wifiPassword: "Network123!",
     qrUrl: "https://guidline-loc-rooms.vercel.app/",
+    qrTitle: {
+      id: "Scan QR Code",
+      en: "Scan QR Code",
+      ja: "QRコードをスキャン",
+    },
+    qrSubtitle: {
+      id: "Akses cepat ke panduan koneksi ruang rapat.",
+      en: "Quick access to the meeting room connection guide.",
+      ja: "会議室の接続ガイドへのクイックアクセス。",
+    },
     installerPath: "/images/iprov410win_web.exe",
     installerFilename: "iProV410Win_Web.exe",
     projectorNote: {

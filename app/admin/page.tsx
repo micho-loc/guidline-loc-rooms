@@ -36,6 +36,12 @@ export default function AdminSettingsPage() {
         qr_url: settings.qr_url,
         installer_path: settings.installer_path,
         installer_filename: settings.installer_filename,
+        qr_title_id: settings.qr_title_id,
+        qr_title_en: settings.qr_title_en,
+        qr_title_ja: settings.qr_title_ja,
+        qr_subtitle_id: settings.qr_subtitle_id,
+        qr_subtitle_en: settings.qr_subtitle_en,
+        qr_subtitle_ja: settings.qr_subtitle_ja,
         projector_note_id: settings.projector_note_id,
         projector_note_en: settings.projector_note_en,
         projector_note_ja: settings.projector_note_ja,
@@ -116,6 +122,80 @@ export default function AdminSettingsPage() {
               className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-ocean-500 outline-none"
               required
             />
+          </div>
+        </div>
+
+        <div className="pt-6 border-t border-slate-100">
+          <h3 className="font-semibold text-lg text-ocean-800 mb-4">QR Code Settings</h3>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Title (ID)</label>
+                <input
+                  type="text"
+                  value={settings.qr_title_id}
+                  onChange={(e) => setSettings({ ...settings, qr_title_id: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-ocean-500 outline-none"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Subtitle (ID)</label>
+                <input
+                  type="text"
+                  value={settings.qr_subtitle_id}
+                  onChange={(e) => setSettings({ ...settings, qr_subtitle_id: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-ocean-500 outline-none"
+                  required
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Title (EN)</label>
+                <input
+                  type="text"
+                  value={settings.qr_title_en}
+                  onChange={(e) => setSettings({ ...settings, qr_title_en: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-ocean-500 outline-none"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Subtitle (EN)</label>
+                <input
+                  type="text"
+                  value={settings.qr_subtitle_en}
+                  onChange={(e) => setSettings({ ...settings, qr_subtitle_en: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-ocean-500 outline-none"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Title (JA)</label>
+                <input
+                  type="text"
+                  value={settings.qr_title_ja}
+                  onChange={(e) => setSettings({ ...settings, qr_title_ja: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-ocean-500 outline-none"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Subtitle (JA)</label>
+                <input
+                  type="text"
+                  value={settings.qr_subtitle_ja}
+                  onChange={(e) => setSettings({ ...settings, qr_subtitle_ja: e.target.value })}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-ocean-500 outline-none"
+                  required
+                />
+              </div>
+            </div>
           </div>
         </div>
 

@@ -6,6 +6,12 @@ type SettingsRow = {
   wifi_ssid: string;
   wifi_password: string;
   qr_url: string;
+  qr_title_id: string;
+  qr_title_en: string;
+  qr_title_ja: string;
+  qr_subtitle_id: string;
+  qr_subtitle_en: string;
+  qr_subtitle_ja: string;
   installer_path: string;
   installer_filename: string;
   projector_note_id: string;
@@ -91,6 +97,16 @@ export async function getGuideContent(): Promise<GuideContent> {
       wifiSsid: settings.wifi_ssid,
       wifiPassword: settings.wifi_password,
       qrUrl: settings.qr_url,
+      qrTitle: localized(
+        settings.qr_title_id || "Scan QR Code",
+        settings.qr_title_en || "Scan QR Code",
+        settings.qr_title_ja || "QRコードをスキャン"
+      ),
+      qrSubtitle: localized(
+        settings.qr_subtitle_id || "Akses cepat ke panduan koneksi ruang rapat.",
+        settings.qr_subtitle_en || "Quick access to the meeting room connection guide.",
+        settings.qr_subtitle_ja || "会議室の接続ガイドへのクイックアクセス。"
+      ),
       installerPath: settings.installer_path,
       installerFilename: settings.installer_filename,
       projectorNote: localized(

@@ -12,7 +12,11 @@ export default async function QrPage() {
   const content = await getGuideContent();
   return (
     <SiteChrome badgeKey="qrBadge" showQrLink={false} printable>
-      <QrPanel url={content.settings.qrUrl} />
+      <QrPanel 
+        url={content.settings.qrUrl} 
+        title={content.settings.qrTitle} 
+        subtitle={content.settings.qrSubtitle} 
+      />
     </SiteChrome>
   );
 }

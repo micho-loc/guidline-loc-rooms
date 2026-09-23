@@ -4,7 +4,8 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import type QRCodeStyling from "qr-code-styling";
 import { T, useLang } from "@/components/language";
-import { displayUrl } from "@/lib/content";
+import { displayUrl, pick } from "@/lib/content";
+import type { Localized } from "@/lib/types";
 
 const STYLE = {
   dotsOptions: { color: "#0a4c8c", type: "rounded" as const },
@@ -13,8 +14,8 @@ const STYLE = {
   cornersDotOptions: { color: "#00b4d8", type: "dot" as const },
 };
 
-export function QrPanel({ url }: { url: string }) {
-  const { href } = useLang();
+export function QrPanel({ url, title, subtitle }: { url: string; title: Localized; subtitle: Localized }) {
+  const { lang, href } = useLang();
   const canvasRef = useRef<HTMLDivElement>(null);
   const qrRef = useRef<QRCodeStyling | null>(null);
   const label = displayUrl(url);
@@ -84,10 +85,10 @@ export function QrPanel({ url }: { url: string }) {
         </div>
         <div className="mb-5">
           <h1 className="font-display text-2xl font-bold text-ocean-700 leading-tight mb-2">
-            <T k="qrTitle" />
+            {pick(title, lang)}
           </h1>
           <p className="text-slate-500 text-xs sm:text-sm max-w-xs mx-auto leading-relaxed">
-            <T k="qrSubtitle" />
+            {pick(subtitle, lang)}
           </p>
         </div>
         <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-md inline-block mb-4 print-qr-wrapper">

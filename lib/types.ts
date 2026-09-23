@@ -24,6 +24,8 @@ export type SiteSettings = {
   wifiSsid: string;
   wifiPassword: string;
   qrUrl: string;
+  qrTitle: Localized;
+  qrSubtitle: Localized;
   installerPath: string;
   installerFilename: string;
   projectorNote: Localized;
